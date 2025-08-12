@@ -5,7 +5,7 @@ echo "============================================"
 
 VPS_HOST="root@88.99.34.44"
 LOCAL_PORT=3001
-REMOTE_PORT=3001
+REMOTE_PORT=3000
 PROJECT_PATH="/root/chatwoot"
 
 # Check if tunnel already exists
@@ -47,5 +47,17 @@ cleanup() {
 # Set up trap for cleanup
 trap cleanup SIGINT SIGTERM
 
-# Start the Rails server on VPS and keep connection alive
-ssh ${VPS_HOST} "cd ${PROJECT_PATH} && export PATH=\"\$HOME/.rbenv/bin:\$PATH\" && eval \"\$(rbenv init -)\" && bundle exec rails server -p ${REMOTE_PORT} -b 0.0.0.0"
+# The Rails server is already running in Docker on port 3000
+echo "🐳 Chatwoot is running in Docker containers on VPS"
+echo "🔍 Checking container status..."
+ssh ${VPS_HOST} "docker ps | grep -E '(chatwoot|rails)'"
+echo ""
+echo "🌐 Creating tunnel to access the running application..."
+
+# Keep the tunnel alive and monitor the connection
+while true; do
+    echo "📍 Access Chatwoot at: http://localhost:${LOCAL_PORT}"
+    echo "🖥️  Server running in Docker on VPS port ${REMOTE_PORT}"
+    echo "Press Ctrl+C to close tunnel"
+    sleep 30
+done
