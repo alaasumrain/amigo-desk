@@ -48,4 +48,4 @@ cleanup() {
 trap cleanup SIGINT SIGTERM
 
 # Start the Rails server on VPS and keep connection alive
-ssh ${VPS_HOST} "cd ${PROJECT_PATH} && bundle exec rails server -p ${REMOTE_PORT} -b 0.0.0.0"
+ssh ${VPS_HOST} "cd ${PROJECT_PATH} && export PATH=\"\$HOME/.rbenv/bin:\$PATH\" && eval \"\$(rbenv init -)\" && bundle exec rails server -p ${REMOTE_PORT} -b 0.0.0.0"
